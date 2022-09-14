@@ -33,29 +33,24 @@ char    **get_path(char **envp)
 }
 
 // We truncate the unix command with path, it's allow to applicate the command on it
-char    *return_path(char **envp, char *cmd)
+char    *return_path(char **envp, char *cmd, char **av)
 {
     int i;
     char    **path;
-    char    *paths;
-    char    *slash;
+    char    **mycmdarg;
 
     i = -1; // Initialize the counter
     path = get_path(envp); // We retrieve the path
-    if (ft_strnstr(cmd, "/", ft_strlen(cmd)))
-        return (cmd);
+    mycmdarg = ft_split(cmd, ' ');
     while (path[++i])
     {
-        slash = ft_strjoin(path[i], "/");
-        paths = ft_strjoin(slash, cmd);
-        free(slash);
-        if (!access(*path, F_OK))
-        {
-            free_split(path);
-            return (paths);
-        }
-        free(paths);
+        cmd = ft_strjoin(path[i], "/");
+        cmd = ft_strjoin(cmd, *av);
+        if (cmd && path)
+            execve(cmd, mycmdarg, envp);
+        else
+            perror("Error");
+        free(cmd);
     }
-    free_split(path);
-    return (0);
+    return (NULL);
 }

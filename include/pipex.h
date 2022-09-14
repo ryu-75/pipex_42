@@ -17,10 +17,11 @@
 # include <sys/wait.h>
 # include <sys/types.h>
 # include  <errno.h>
+# include <fcntl.h>
 
 // ----------------------- [PARSING] ----------------------------- //
 
-char    *return_path(char **envp, char *cmd);
+char    *return_path(char **envp, char *cmd, char **av);
 char    **get_path(char **envp);
 
 // ----------------------- [UTILS] ------------------------------- //
@@ -31,7 +32,10 @@ char    *cmd_not_found(char **cmd);
 
 //  ---------------------- [PIPEX] ------------------------------- //
 
-void    first_child(char **av, int *fd_dup, int  *fd, char **envp);
-void    second_child(char **av, int *fd_dup, int *fd, char **envp);
+// void    first_child(char **av, int *fd_dup, int  *fd, char **envp);
+int first_child(char **av, int *fd_dup, char *cmd, char **envp);
+int second_child(char **av, int *fd_dup, char *cmd, char **envp);
+
+// void    second_child(char **av, int *fd_dup, int *fd, char **envp);
 
 # endif
