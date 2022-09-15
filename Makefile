@@ -5,9 +5,7 @@ SRCS_DIR					= src
 SRCS						= $(SRCS_DIR)/pipex.c 			\
 								$(SRCS_DIR)/parsing.c 		\
 								$(SRCS_DIR)/utils.c 		\
-								$(SRCS_DIR)/children.c		\
-								$(SRCS_DIR)/main.c			\
-								$(SRCS_DIR)/child_test.c	
+								$(SRCS_DIR)/children.c	
 								
 OBJ							= $(SRCS:.c=.o)
 DEP							= $(SRCS:.c=.d)
