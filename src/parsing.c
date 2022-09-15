@@ -33,16 +33,15 @@ char    **get_path(char **envp)
 }
 
 // We truncate the unix command with path, it's allow to applicate the command on it
-char    *return_path(char **envp, char *cmd, char *av)
+char    *return_path(char **envp, char *cmd)
 {
     int i;
     char    **paths;
     char    **mycmdarg;
     char    *mycmd;
 
-    (void)av;
-    i = -1; // Initialize the counter
-    paths = get_path(envp); // We retrieve the path
+    i = -1;
+    paths = get_path(envp);
     mycmdarg = ft_split(cmd, ' ');
     while (paths[++i])
     {

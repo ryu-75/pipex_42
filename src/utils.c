@@ -26,23 +26,21 @@ int ft_error(char *s)
 void    free_split(char **str)
 {
     int size;
-    int i;
 
-    i = 0;
     size = ft_strlen(*str);
-    while (i < size)
+    while (size)
     {
         if (*str)
-            free(str[i]);
-        i++;
+            free(str[--size]);
     }
+    free(str);
 }
 
 //  Returns - cmd : command not found - if the cmd[2] or cmd[3] is not found
-char    *cmd_not_found(char **cmd)
+void    cmd_not_found(char *cmd)
 {
-    write (2, &cmd[0], ft_strlen(cmd[0]));
+    write (2, cmd, ft_strlen(cmd));
     write(2, ": command not found\n", 20);
-    free_split(cmd);
-    return (NULL);
+    free(cmd);
+    exit(0);
 }

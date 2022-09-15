@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlorion <nlorion@42.student.fr>            +#+  +:+       +#+        */
+/*   By: nlorion <nlorion@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/14 11:55:43 by nlorion           #+#    #+#             */
-/*   Updated: 2022/09/15 17:18:36 by nlorion          ###   ########.fr       */
+/*   Updated: 2022/09/15 22:37:26 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,7 @@ int main(int ac, char **av, char **envp)
 {
     int fd_dup[2];
     int status;
-    pid_t   pid;
 
-    pid = fork();
     if (ac < 5)
     {
         write (2, "Expected : file1 [cmd1] [cmd2] file2\n", 37);

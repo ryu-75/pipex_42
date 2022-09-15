@@ -21,14 +21,14 @@
 
 // ----------------------- [PARSING] ----------------------------- //
 
-char    *return_path(char **envp, char *cmd, char *av);
+char    *return_path(char **envp, char *cmd);
 char    **get_path(char **envp);
 
 // ----------------------- [UTILS] ------------------------------- //
 
 int ft_error(char *s);
 void    free_split(char **str);
-char    *cmd_not_found(char **cmd);
+void    cmd_not_found(char *cmd);
 
 //  ---------------------- [PIPEX] ------------------------------- //
 
