@@ -6,7 +6,7 @@
 /*   By: nlorion <nlorion@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/14 11:55:43 by nlorion           #+#    #+#             */
-/*   Updated: 2022/09/15 22:37:26 by nlorion          ###   ########.fr       */
+/*   Updated: 2022/09/16 14:16:31 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,13 @@ int main(int ac, char **av, char **envp)
 
     if (ac < 5)
     {
-        write (2, "Expected : file1 [cmd1] [cmd2] file2\n", 37);
+        ft_putstr_fd("Expected : file1 [cmd1] [cmd2] file2\n", 2);
         exit(0);
     }
     else
     {
         if (pipe(fd_dup) < 0)
-            ft_error("pipe");
+            perror("pipe");
         else
         {
             first_child(av, fd_dup, av[2], envp);

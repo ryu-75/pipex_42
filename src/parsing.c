@@ -15,20 +15,13 @@
 // We retrieve the path in a simple array and then we split at ':' symbol for retrieve correctly it
 char    **get_path(char **envp)
 {
-    char    *path;
     char    **split_path;
     int i;
 
     i = 0;
-    path = malloc(sizeof(char *) + ft_strlen(envp[i]) + 1);
-    if (!path)
-        return (NULL);
     while(!ft_strnstr(envp[i], "PATH", 4))
         i++;
-    path = envp[i];
-    path = ft_substr(envp[i], 5, ft_strlen(path));
-    split_path = ft_split(path, ':');
-    free(path);
+    split_path = ft_split(envp[i] + 5, ':');
     return (split_path);
 }
 
@@ -39,18 +32,25 @@ char    *return_path(char **envp, char *cmd)
     char    **paths;
     char    **mycmdarg;
     char    *mycmd;
+    char    *part_path;
 
     i = -1;
     paths = get_path(envp);
     mycmdarg = ft_split(cmd, ' ');
     while (paths[++i])
     {
-        paths[i] = ft_strjoin(paths[i], "/");
-        mycmd = ft_strjoin(paths[i], *mycmdarg);
+        part_path = ft_strjoin(paths[i], "/");
+        mycmd = ft_strjoin(part_path, *mycmdarg);
+        free(part_path);
         if (access(mycmd, X_OK) == 0)
+        {
+            free_split(paths);
+            free_split(mycmdarg);
             return (mycmd);
+        }
         free(mycmd);
     }
-    free(mycmdarg);
+    free_split(paths);
+    free_split(mycmdarg);
     return (NULL);
 }

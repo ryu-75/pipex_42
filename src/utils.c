@@ -13,34 +13,36 @@
 #include "../include/pipex.h"
 
 // Return an error
-int ft_error(char *s)
+void    ft_error(char *s, char **cmd, char *path)
 {
-    if (errno == 0)
-        return (EXIT_FAILURE);
-    else
-        perror(s);
-    return (EXIT_FAILURE);
+    perror(s);
+    all_free(path, cmd);
+    exit(0);
 }
 
 // Free each array create by ft_split
 void    free_split(char **str)
 {
-    int size;
+    int i;
 
-    size = ft_strlen(*str);
-    while (size)
+    i = 0;
+    while (str[i] != 0)
     {
         if (*str)
-            free(str[--size]);
+            free(str[i++]);
     }
     free(str);
 }
 
 //  Returns - cmd : command not found - if the cmd[2] or cmd[3] is not found
-void    cmd_not_found(char *cmd)
+void    cmd_not_found(char **cmd)
 {
-    write (2, cmd, ft_strlen(cmd));
+    write (2, *cmd, ft_strlen(*cmd));
     write(2, ": command not found\n", 20);
-    free(cmd);
-    exit(0);
+}
+
+void    all_free(char *path, char **cmd)
+{
+    free_split(cmd);
+    free(path);
 }

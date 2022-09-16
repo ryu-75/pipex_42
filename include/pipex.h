@@ -26,9 +26,10 @@ char    **get_path(char **envp);
 
 // ----------------------- [UTILS] ------------------------------- //
 
-int ft_error(char *s);
+void    ft_error(char *s, char **cmd, char *path);
 void    free_split(char **str);
-void    cmd_not_found(char *cmd);
+void    cmd_not_found(char **cmd);
+void    all_free(char *path, char **cmd);
 
 //  ---------------------- [PIPEX] ------------------------------- //
 
