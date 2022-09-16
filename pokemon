@@ -1,8 +1,0 @@
-Makefile
-include
-libft
-ls -la
-pipex
-pokemon
-src
-test.txt
