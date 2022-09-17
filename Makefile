@@ -1,23 +1,24 @@
 PREFIXE						= pipex
 EXEC						= $(PREFIXE)
+DEBUG						= yes
 
 SRCS_DIR					= src
 SRCS						= $(SRCS_DIR)/pipex.c 			\
 								$(SRCS_DIR)/parsing.c 		\
 								$(SRCS_DIR)/utils.c 		\
 								$(SRCS_DIR)/children.c	
-								
+
 OBJ							= $(SRCS:.c=.o)
 DEP							= $(SRCS:.c=.d)
 
-# %.o							: %.c
-# 							$(CC) -c $(CFLAGS) $*.c -o $*.o
-# 							$(CC) -MMD $(CFLAGS) $*.c -o $*.d
+%.o				: %.c
+							$(CC) -c $(CFLAGS) $*.c -o $*.o
+							$(CC) -MM $(CFLAGS) $*.c -o $*.d
+
+CC							= cc
 
 $(EXEC)						: libft/libft.a $(OBJ)
 							$(CC) $(CFLAGS) $(OBJ) -L libft -lft -o $(EXEC)
-
-CC							= cc
 
 CFLAGS						= -Wall -Werror -Wextra -g
 
@@ -28,6 +29,7 @@ libft/libft.a				:
 
 clean						: 
 							rm -f $(OBJ) $(DEP)
+							rm -rf obj
 							make clean -C libft
 					
 fclean						: clean

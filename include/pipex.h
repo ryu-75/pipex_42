@@ -6,7 +6,7 @@
 /*   By: nlorion <nlorion@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/05 17:31:47 by nlorion           #+#    #+#             */
-/*   Updated: 2022/09/05 17:31:47 by nlorion          ###   ########.fr       */
+/*   Updated: 2022/09/17 14:07:14 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,18 +21,18 @@
 
 // ----------------------- [PARSING] ----------------------------- //
 
-char    *return_path(char **envp, char *cmd);
-char    **get_path(char **envp);
+char	*return_path(char **envp, char *cmd);
+char	**get_path(char **envp);
 
 // ----------------------- [UTILS] ------------------------------- //
 
-void    ft_error(char *s, char **cmd, char *path);
-void    free_split(char **str);
-void    cmd_not_found(char **cmd);
-void    all_free(char *path, char **cmd);
+void	ft_error(char *s, char **cmd, char *path);
+void	free_split(char **str);
+void	cmd_not_found(char **cmd);
+void	all_free(char *path, char **cmd);
 
 //  ---------------------- [PIPEX] ------------------------------- //
 
-void    first_child(char **av, int *fd_dup, char *cmd, char **envp);
-void    second_child(char **av, int *fd_dup, char *cmd, char **envp);
-# endif
+void	first_child(char **av, int *fd_dup, char *cmd, char **envp);
+void	second_child(char **av, int *fd_dup, char *cmd, char **envp);
+#endif
