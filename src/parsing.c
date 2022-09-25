@@ -20,7 +20,7 @@ char	**get_path(char **envp)
 	int		i;
 
 	i = 0;
-	while (!ft_strnstr (envp[i], "PATH", 4))
+	while (!ft_strnstr(envp[i], "PATH", 4))
 		i++;
 	split_path = ft_split(envp[i] + 5, ':');
 	return (split_path);
@@ -37,6 +37,8 @@ char	*return_path(char **envp, char *cmd)
 	char	*part_path;
 
 	i = -1;
+	if (ft_strnstr(cmd, "/", ft_strlen(cmd)))
+		return (cmd);
 	paths = get_path(envp);
 	mycmdarg = ft_split(cmd, ' ');
 	while (paths[++i])
@@ -44,15 +46,11 @@ char	*return_path(char **envp, char *cmd)
 		part_path = ft_strjoin(paths[i], "/");
 		mycmd = ft_strjoin(part_path, *mycmdarg);
 		free(part_path);
-		if (access(mycmd, X_OK) == 0)
-		{
-			free_split(paths);
-			free_split(mycmdarg);
+		if (check_access(mycmd, mycmdarg, paths, X_OK) == 1)
 			return (mycmd);
-		}
 		free(mycmd);
 	}
-	free_split(paths);
 	free_split(mycmdarg);
+	free_split(paths);
 	return (NULL);
 }

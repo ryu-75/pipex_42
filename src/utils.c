@@ -13,11 +13,10 @@
 #include "../include/pipex.h"
 
 // Return an error
-void	ft_error(char *s, char **cmd, char *path)
+void	ft_error(char *s)
 {
 	perror(s);
-	all_free(path, cmd);
-	exit(0);
+	exit(EXIT_FAILURE);
 }
 
 // Free each array create by ft_split
@@ -28,7 +27,7 @@ void	free_split(char **str)
 	i = 0;
 	while (str[i] != 0)
 	{
-		if (*str)
+		if (str[i])
 			free(str[i++]);
 	}
 	free(str);
@@ -45,4 +44,15 @@ void	all_free(char *path, char **cmd)
 {
 	free_split(cmd);
 	free(path);
+}
+
+int	check_access(char *mycmd, char **mycmdarg, char **paths, int type)
+{
+	if (access(mycmd, type) == 0)
+	{
+		free_split(paths);
+		free_split(mycmdarg);
+		return (1);
+	}
+	return (0);
 }
