@@ -6,7 +6,7 @@
 /*   By: nlorion <nlorion@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/14 12:46:52 by nlorion           #+#    #+#             */
-/*   Updated: 2022/09/26 01:21:33 by nlorion          ###   ########.fr       */
+/*   Updated: 2022/09/26 19:50:48 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static void	execute(char **cmd, char *path, char **envp, int fd)
 	}
 }
 
-static void	fd_setting(int *fd_dup, int fd, int pid)
+static void	fd_setting_1(int *fd_dup, int fd, int pid)
 {
 	if (pid == 0)
 	{
@@ -37,7 +37,11 @@ static void	fd_setting(int *fd_dup, int fd, int pid)
 			exit(0);
 		dup2(fd_dup[1], STDOUT_FILENO);
 	}
-	else if (pid > 0)
+}
+
+static void	fd_setting_2(int *fd_dup, int fd, int pid)
+{
+	if (pid == 0)
 	{
 		dup2(fd, STDOUT_FILENO);
 		if (dup2(fd_dup[0], STDIN_FILENO) < 0)
@@ -63,7 +67,7 @@ void	first_child(char **av, int *fd_dup, char *cmd, char **envp)
 		path = return_path(envp, cmd);
 		mycmd = ft_split(cmd, ' ');
 		close(fd_dup[0]);
-		fd_setting(fd_dup, fd, pid);
+		fd_setting_1(fd_dup, fd, pid);
 		execute(mycmd, path, envp, fd);
 	}
 }
@@ -78,7 +82,7 @@ void	second_child(char **av, int *fd_dup, char *cmd, char **envp)
 	pid = fork();
 	if (pid < 0)
 		ft_error("fork");
-	else if (pid > 0)
+	else if (pid == 0)
 	{
 		fd = open(av[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (fd < 0)
@@ -86,7 +90,7 @@ void	second_child(char **av, int *fd_dup, char *cmd, char **envp)
 		path = return_path(envp, cmd);
 		mycmd = ft_split(cmd, ' ');
 		close(fd_dup[1]);
-		fd_setting(fd_dup, fd, pid);
+		fd_setting_2(fd_dup, fd, pid);
 		execute(mycmd, path, envp, fd);
 		free_split(mycmd);
 	}
