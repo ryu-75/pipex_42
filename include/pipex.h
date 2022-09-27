@@ -6,7 +6,7 @@
 /*   By: nlorion <nlorion@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/05 17:31:47 by nlorion           #+#    #+#             */
-/*   Updated: 2022/09/17 14:07:14 by nlorion          ###   ########.fr       */
+/*   Updated: 2022/09/27 11:57:09 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,10 @@ void	ft_error(char *s);
 void	free_split(char **str);
 void	cmd_not_found(char **cmd);
 void	all_free(char *path, char **cmd);
-int	check_access(char *mycmd, char **mycmdarg, char **paths, int type);
+int		check_access(char *mycmd, char **mycmdarg, char **paths, int type);
 
 //  ---------------------- [PIPEX] ------------------------------- //
 
-void	first_child(char **av, int *fd_dup, char *cmd, char **envp);
-void	second_child(char **av, int *fd_dup, char *cmd, char **envp);
+void	first_child(char **av, int *fd_dup, int *fd, char *cmd, char **envp);
+void	second_child(char **av, int *fd_dup, int *fd, char *cmd, char **envp);
 #endif

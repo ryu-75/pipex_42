@@ -6,7 +6,7 @@
 /*   By: nlorion <nlorion@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/07 15:55:51 by nlorion           #+#    #+#             */
-/*   Updated: 2022/09/17 13:54:46 by nlorion          ###   ########.fr       */
+/*   Updated: 2022/09/27 11:59:48 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,10 @@
 // Return an error
 void	ft_error(char *s)
 {
-	perror(s);
+	if (errno == 0)
+		write(1, "Error\n", 6);
+	else
+		perror(s);
 	exit(EXIT_FAILURE);
 }
 
@@ -33,7 +36,6 @@ void	free_split(char **str)
 	free(str);
 }
 
-//  Returns - cmd : command not found - if the cmd[2] or cmd[3] is not found
 void	cmd_not_found(char **cmd)
 {
 	write (2, *cmd, ft_strlen(*cmd));

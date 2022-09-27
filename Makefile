@@ -11,7 +11,7 @@ SRCS						= $(SRCS_DIR)/pipex.c 			\
 OBJ							= $(SRCS:.c=.o)
 DEP							= $(SRCS:.c=.d)
 
-%.o				: %.c
+%.o							: %.c
 							$(CC) -c $(CFLAGS) $*.c -o $*.o
 							$(CC) -MM $(CFLAGS) $*.c -o $*.d
 

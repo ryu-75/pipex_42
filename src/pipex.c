@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlorion <nlorion@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nlorion <nlorion@42.student.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/14 11:55:43 by nlorion           #+#    #+#             */
-/*   Updated: 2022/09/26 01:15:50 by nlorion          ###   ########.fr       */
+/*   Updated: 2022/09/27 18:08:12 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int	main(int ac, char **av, char **envp)
 {
 	int	fd_dup[2];
+	int	fd[2];
 	int	status;
 
 	if (ac < 5)
@@ -24,10 +25,10 @@ int	main(int ac, char **av, char **envp)
 	}
 	else
 	{
-		if (pipe(fd_dup) == -1)
-			ft_error(NULL);
-		first_child(av, fd_dup, av[2], envp);
-		second_child(av, fd_dup, av[3], envp);
+		if (pipe(fd_dup) < 0)
+			ft_error("pipex");
+		first_child(av, fd_dup, fd, av[2], envp);
+		second_child(av, fd_dup, fd, av[3], envp);
 		close(fd_dup[0]);
 		close(fd_dup[1]);
 		waitpid(-1, &status, 0);
