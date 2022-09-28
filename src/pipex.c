@@ -6,7 +6,7 @@
 /*   By: nlorion <nlorion@42.student.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/14 11:55:43 by nlorion           #+#    #+#             */
-/*   Updated: 2022/09/27 18:08:12 by nlorion          ###   ########.fr       */
+/*   Updated: 2022/09/28 12:43:17 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 int	main(int ac, char **av, char **envp)
 {
 	int	fd_dup[2];
-	int	fd[2];
-	int	status;
 
 	if (ac < 5)
 	{
@@ -26,13 +24,9 @@ int	main(int ac, char **av, char **envp)
 	else
 	{
 		if (pipe(fd_dup) < 0)
-			ft_error("pipex");
-		first_child(av, fd_dup, fd, av[2], envp);
-		second_child(av, fd_dup, fd, av[3], envp);
-		close(fd_dup[0]);
-		close(fd_dup[1]);
-		waitpid(-1, &status, 0);
-		waitpid(-1, &status, 0);
+			ft_error("pipe");
+		else
+			pipex(av, fd_dup, envp);
 	}
 	return (0);
 }

@@ -6,91 +6,84 @@
 /*   By: nlorion <nlorion@42.student.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/14 12:46:52 by nlorion           #+#    #+#             */
-/*   Updated: 2022/09/27 18:33:26 by nlorion          ###   ########.fr       */
+/*   Updated: 2022/09/28 17:31:30 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
-static void	execute(char **cmd, char *path, char **envp)
+void	child(char **av, int *fd_dup, char **envp)
 {
-	if (!(cmd[0] && path))
-	{
-		cmd_not_found(cmd);
-		all_free(path, cmd);
-		exit(0);
-	}
+	char	*path;
+	char	**mycmd;
+	int		fd;
+
+	fd = open(av[1], O_RDONLY);
+	if (fd < 0)
+		ft_error("error");
 	else
 	{
-		execve(path, cmd, envp);
-		all_free(path, cmd);
-	}
-}
-
-static void	fd_setting_1(int *fd_dup, int fd)
-{
-	if (dup2(fd, STDIN_FILENO) < 0)
-	{
-		close(fd);
-		exit(EXIT_FAILURE);
-	}
-	close(fd);
-	dup2(fd_dup[1], STDOUT_FILENO);
-	close(fd_dup[1]);
-}
-
-static void	fd_setting_2(int *fd_dup, int fd)
-{
-	dup2(fd, STDOUT_FILENO);
-	close(fd);
-	if (dup2(fd_dup[0], STDIN_FILENO) < 0)
-	{
-		close(fd);
-		exit(EXIT_FAILURE);
-	}
-	close(fd_dup[0]);
-}
-
-void	first_child(char **av, int *fd_dup, int *fd, char *cmd, char **envp)
-{
-	char	*path;
-	char	**mycmd;
-	pid_t	pid;
-
-	pid = fork();
-	if (pid < 0)
-		ft_error("fork");
-	else if (pid == 0)
-	{
-		fd[0] = open(av[1], O_RDONLY);
-		if (fd[0] < 0)
-			ft_error("error");
-		path = return_path(envp, cmd);
-		mycmd = ft_split(cmd, ' ');
+		path = return_path(envp, av[2]);
+		mycmd = ft_split(av[2], ' ');
 		close(fd_dup[0]);
-		fd_setting_1(fd_dup, fd[0]);
-		execute(mycmd, path, envp);
+		dup2(fd, STDIN_FILENO);
+		close(fd);
+		dup2(fd_dup[1], STDOUT_FILENO);
+		if (mycmd[0] && path)
+		{
+			execve(path, mycmd, envp);
+			all_free(path, mycmd);
+		}
+		else
+			cmd_not_found(path, mycmd);
 	}
 }
 
-void	second_child(char **av, int *fd_dup, int *fd, char *cmd, char **envp)
+void	parent(char **av, int *fd_dup, char **envp)
 {
 	char	*path;
 	char	**mycmd;
-	pid_t	pid;
+	int		fd;
 
-	pid = fork();
-	if (pid < 0)
-		ft_error("fork");
-	else if (pid == 0)
+	fd = open(av[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fd < 0)
+		ft_error("error");
+	else
 	{
-		fd[1] = open(av[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (fd[1] < 0)
-			ft_error("error");
-		path = return_path(envp, cmd);
-		mycmd = ft_split(cmd, ' ');
+		path = return_path(envp, av[3]);
+		mycmd = ft_split(av[3], ' ');
 		close(fd_dup[1]);
-		fd_setting_2(fd_dup, fd[1]);
-		execute(mycmd, path, envp);
+		dup2(fd, STDOUT_FILENO);
+		dup2(fd_dup[0], STDIN_FILENO);
+		close(fd);
+		if (mycmd[0] && path)
+		{
+			execve(path, mycmd, envp);
+			all_free(path, mycmd);
+		}
+		else
+			cmd_not_found(path, mycmd);
 	}
+}
+
+void	pipex(char **av, int *fd_dup, char **envp)
+{
+	int	pid1;
+	int	pid2;
+	int	status;
+
+	pid1 = fork();
+	if (pid1 < 0)
+		ft_error("fork");
+	else if (pid1 == 0)
+		child(av, fd_dup, envp);
+	pid2 = fork();
+	if (pid2 < 0)
+		ft_error("fork");
+	else if (pid2 == 0)
+		parent(av, fd_dup, envp);
+	close(fd_dup[0]);
+	close(fd_dup[1]);
+	waitpid(pid1, &status, 0);
+	waitpid(pid2, &status, 0);
 }

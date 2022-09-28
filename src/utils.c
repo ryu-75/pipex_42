@@ -6,7 +6,7 @@
 /*   By: nlorion <nlorion@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/07 15:55:51 by nlorion           #+#    #+#             */
-/*   Updated: 2022/09/27 11:59:48 by nlorion          ###   ########.fr       */
+/*   Updated: 2022/09/28 14:27:05 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,12 @@ void	free_split(char **str)
 	free(str);
 }
 
-void	cmd_not_found(char **cmd)
+void	cmd_not_found(char *path, char **cmd)
 {
 	write (2, *cmd, ft_strlen(*cmd));
 	ft_putstr_fd (": command not found\n", 2);
+	all_free(path, cmd);
+	exit(EXIT_FAILURE);
 }
 
 void	all_free(char *path, char **cmd)
