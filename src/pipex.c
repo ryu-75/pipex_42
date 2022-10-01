@@ -6,7 +6,7 @@
 /*   By: nlorion <nlorion@42.student.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/14 11:55:43 by nlorion           #+#    #+#             */
-/*   Updated: 2022/09/28 12:43:17 by nlorion          ###   ########.fr       */
+/*   Updated: 2022/10/01 15:21:06 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	main(int ac, char **av, char **envp)
 {
 	int	fd_dup[2];
 
-	if (ac < 5)
+	if (ac != 5)
 	{
 		ft_putstr_fd("Expected : file1 [cmd1] [cmd2] file2\n", 2);
 		exit(0);
