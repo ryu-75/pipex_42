@@ -29,6 +29,7 @@ void	child(char **av, int *fd_dup, char **envp)
 		dup2(fd, STDIN_FILENO);
 		close(fd);
 		dup2(fd_dup[1], STDOUT_FILENO);
+		close(fd_dup[1]);
 		if (mycmd[0] && path)
 		{
 			execve(path, mycmd, envp);
@@ -55,6 +56,7 @@ void	parent(char **av, int *fd_dup, char **envp)
 		close(fd_dup[1]);
 		dup2(fd, STDOUT_FILENO);
 		dup2(fd_dup[0], STDIN_FILENO);
+		close(fd_dup[0]);
 		close(fd);
 		if (mycmd[0] && path)
 		{

@@ -24,7 +24,10 @@ int	main(int ac, char **av, char **envp)
 	else
 	{
 		if (pipe(fd_dup) < 0)
-			ft_error("pipe");
+		{
+			perror("pipe");
+			exit(EXIT_FAILURE);
+		}
 		else
 			pipex(av, fd_dup, envp);
 	}
