@@ -45,12 +45,14 @@ char	*return_path(char **envp, char *cmd)
 	{
 		part_path = ft_strjoin(paths[i], "/");
 		mycmd = ft_strjoin(part_path, *mycmdarg);
-		free(part_path);
 		if (check_access(mycmd, mycmdarg, paths, X_OK) == 1)
+		{
+			free(part_path);
 			return (mycmd);
+		}
 		free(mycmd);
 	}
 	free_split(mycmdarg);
 	free_split(paths);
-	return (NULL);
+	return (0);
 }

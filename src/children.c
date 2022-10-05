@@ -6,7 +6,7 @@
 /*   By: nlorion <nlorion@42.student.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/14 12:46:52 by nlorion           #+#    #+#             */
-/*   Updated: 2022/10/01 12:00:13 by nlorion          ###   ########.fr       */
+/*   Updated: 2022/10/05 18:48:28 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,23 +21,27 @@ void	child(char **av, int *fd_dup, char **envp)
 	fd = open(av[1], O_RDONLY);
 	if (fd < 0)
 		ft_error("error");
-	else
+	path = return_path(envp, av[2]);
+	mycmd = ft_split(av[2], ' ');
+	close(fd_dup[0]);
+	if (dup2(fd, STDIN_FILENO < 0))
 	{
-		path = return_path(envp, av[2]);
-		mycmd = ft_split(av[2], ' ');
-		close(fd_dup[0]);
-		dup2(fd, STDIN_FILENO);
 		close(fd);
-		dup2(fd_dup[1], STDOUT_FILENO);
 		close(fd_dup[1]);
-		if (mycmd[0] && path)
-		{
-			execve(path, mycmd, envp);
-			all_free(path, mycmd);
-		}
-		else
-			cmd_not_found(path, mycmd);
+		exit(EXIT_FAILURE);
 	}
+	close(fd);
+	dup2(fd_dup[1], STDOUT_FILENO);
+	close(fd_dup[1]);
+	if (mycmd[0] && path)
+	{
+		if (execve(path, mycmd, envp) == -1)
+			ft_error("error");
+		free(path);
+		free_split(mycmd);
+	}
+	else
+		cmd_not_found(mycmd);
 }
 
 void	parent(char **av, int *fd_dup, char **envp)
@@ -49,23 +53,27 @@ void	parent(char **av, int *fd_dup, char **envp)
 	fd = open(av[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd < 0)
 		ft_error("error");
-	else
+	path = return_path(envp, av[3]);
+	mycmd = ft_split(av[3], ' ');
+	close(fd_dup[1]);
+	dup2(fd, STDOUT_FILENO);
+	if (dup2(fd_dup[0], STDIN_FILENO < 0))
 	{
-		path = return_path(envp, av[3]);
-		mycmd = ft_split(av[3], ' ');
-		close(fd_dup[1]);
-		dup2(fd, STDOUT_FILENO);
-		dup2(fd_dup[0], STDIN_FILENO);
-		close(fd_dup[0]);
 		close(fd);
-		if (mycmd[0] && path)
-		{
-			execve(path, mycmd, envp);
-			all_free(path, mycmd);
-		}
-		else
-			cmd_not_found(path, mycmd);
+		close(fd_dup[0]);
+		exit(EXIT_FAILURE);
 	}
+	close(fd_dup[0]);
+	close(fd);
+	if (mycmd[0] && path)
+	{
+		if (execve(path, mycmd, envp) == -1)
+			ft_error("error");
+		free(path);
+		free_split(mycmd);
+	}
+	else
+		cmd_not_found(mycmd);
 }
 
 void	pipex(char **av, int *fd_dup, char **envp)

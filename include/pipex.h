@@ -28,8 +28,8 @@ char	**get_path(char **envp);
 
 void	ft_error(char *s);
 void	free_split(char **str);
-void	cmd_not_found(char *path, char **cmd);
-void	all_free(char *path, char **cmd);
+void	cmd_not_found(char **cmd);
+// void	all_free(char *path, char **cmd);
 int		check_access(char *mycmd, char **mycmdarg, char **paths, int type);
 
 //  ---------------------- [PIPEX] ------------------------------- //

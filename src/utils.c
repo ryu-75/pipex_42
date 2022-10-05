@@ -36,19 +36,14 @@ void	free_split(char **str)
 	free(str);
 }
 
-void	cmd_not_found(char *path, char **cmd)
+void	cmd_not_found(char **cmd)
 {
 	write (2, *cmd, ft_strlen(*cmd));
 	ft_putstr_fd (": command not found\n", 2);
-	all_free(path, cmd);
+	free_split(cmd);
 	exit(EXIT_FAILURE);
 }
 
-void	all_free(char *path, char **cmd)
-{
-	free_split(cmd);
-	free(path);
-}
 
 int	check_access(char *mycmd, char **mycmdarg, char **paths, int type)
 {
