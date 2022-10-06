@@ -20,7 +20,7 @@ CC							= cc
 $(EXEC)						: libft/libft.a $(OBJ)
 							$(CC) $(CFLAGS) $(OBJ) -L libft -lft -o $(EXEC)
 
-CFLAGS						= -Wall -Werror -Wextra -g
+CFLAGS						= -Wall -Wextra -Werror
 
 all							: $(EXEC)
 

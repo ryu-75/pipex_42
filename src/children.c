@@ -6,7 +6,7 @@
 /*   By: nlorion <nlorion@42.student.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/14 12:46:52 by nlorion           #+#    #+#             */
-/*   Updated: 2022/10/06 11:53:34 by nlorion          ###   ########.fr       */
+/*   Updated: 2022/10/06 17:01:41 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	child(char **av, int *fd_dup, char **envp)
 	close(fd);
 	dup2(fd_dup[1], STDOUT_FILENO);
 	close(fd_dup[1]);
-	if (mycmd[0] && path)
+	if (execve(mycmd[0], mycmd, envp) == -1)
 	{
 		if (execve(path, mycmd, envp) == -1)
 		{
@@ -46,8 +46,8 @@ void	parent(char **av, int *fd_dup, char **envp)
 	char	*path;
 	char	**mycmd;
 	int		fd;
-
-	fd = creat(av[4], 0644);
+	
+	fd = open(av[4], O_WRONLY | O_CREAT | O_TRUNC, 0664);
 	if (fd < 0)
 		ft_error("error");
 	path = return_path(envp, av[3]);
@@ -58,7 +58,7 @@ void	parent(char **av, int *fd_dup, char **envp)
 	if (dup2(fd_dup[0], STDIN_FILENO < 0))
 		exit(EXIT_FAILURE);
 	close(fd_dup[0]);
-	if (mycmd[0] && path)
+	if (execve(mycmd[0], mycmd, envp) == -1)
 	{
 		if (execve(path, mycmd, envp) == -1)
 		{
