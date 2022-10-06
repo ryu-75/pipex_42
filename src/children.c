@@ -6,7 +6,7 @@
 /*   By: nlorion <nlorion@42.student.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/14 12:46:52 by nlorion           #+#    #+#             */
-/*   Updated: 2022/10/05 18:48:28 by nlorion          ###   ########.fr       */
+/*   Updated: 2022/10/06 11:53:34 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,20 +25,17 @@ void	child(char **av, int *fd_dup, char **envp)
 	mycmd = ft_split(av[2], ' ');
 	close(fd_dup[0]);
 	if (dup2(fd, STDIN_FILENO < 0))
-	{
-		close(fd);
-		close(fd_dup[1]);
 		exit(EXIT_FAILURE);
-	}
 	close(fd);
 	dup2(fd_dup[1], STDOUT_FILENO);
 	close(fd_dup[1]);
 	if (mycmd[0] && path)
 	{
 		if (execve(path, mycmd, envp) == -1)
+		{
+			free_split(mycmd);
 			ft_error("error");
-		free(path);
-		free_split(mycmd);
+		}
 	}
 	else
 		cmd_not_found(mycmd);
@@ -50,27 +47,24 @@ void	parent(char **av, int *fd_dup, char **envp)
 	char	**mycmd;
 	int		fd;
 
-	fd = open(av[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	fd = creat(av[4], 0644);
 	if (fd < 0)
 		ft_error("error");
 	path = return_path(envp, av[3]);
 	mycmd = ft_split(av[3], ' ');
 	close(fd_dup[1]);
 	dup2(fd, STDOUT_FILENO);
-	if (dup2(fd_dup[0], STDIN_FILENO < 0))
-	{
-		close(fd);
-		close(fd_dup[0]);
-		exit(EXIT_FAILURE);
-	}
-	close(fd_dup[0]);
 	close(fd);
+	if (dup2(fd_dup[0], STDIN_FILENO < 0))
+		exit(EXIT_FAILURE);
+	close(fd_dup[0]);
 	if (mycmd[0] && path)
 	{
 		if (execve(path, mycmd, envp) == -1)
+		{
+			free_split(mycmd);
 			ft_error("error");
-		free(path);
-		free_split(mycmd);
+		}
 	}
 	else
 		cmd_not_found(mycmd);

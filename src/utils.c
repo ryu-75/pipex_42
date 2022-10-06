@@ -44,7 +44,6 @@ void	cmd_not_found(char **cmd)
 	exit(EXIT_FAILURE);
 }
 
-
 int	check_access(char *mycmd, char **mycmdarg, char **paths, int type)
 {
 	if (access(mycmd, type) == 0)
