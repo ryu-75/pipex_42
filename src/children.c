@@ -3,14 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   children.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlorion <nlorion@42.student.fr>            +#+  +:+       +#+        */
+/*   By: sasha <sasha@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/14 12:46:52 by nlorion           #+#    #+#             */
-/*   Updated: 2022/10/06 17:01:41 by nlorion          ###   ########.fr       */
+/*   Updated: 2022/10/07 11:13:38 by sasha            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
+
+static void	exec_cmd(char **mycmd, char **envp, char *path)
+{
+	if (ft_strnstr(mycmd[0], "/", ft_strlen(mycmd[0]))
+		&& execve(mycmd[0], mycmd, envp) == -1)
+	{
+		free_split(mycmd);
+		ft_error("error");
+	}
+	else if (path && execve(path, mycmd, envp) == -1)
+	{
+		free_split(mycmd);
+		ft_error("error");
+	}
+	else
+		cmd_not_found(mycmd);
+}
 
 void	child(char **av, int *fd_dup, char **envp)
 {
@@ -29,16 +46,7 @@ void	child(char **av, int *fd_dup, char **envp)
 	close(fd);
 	dup2(fd_dup[1], STDOUT_FILENO);
 	close(fd_dup[1]);
-	if (execve(mycmd[0], mycmd, envp) == -1)
-	{
-		if (execve(path, mycmd, envp) == -1)
-		{
-			free_split(mycmd);
-			ft_error("error");
-		}
-	}
-	else
-		cmd_not_found(mycmd);
+	exec_cmd(mycmd, envp, path);
 }
 
 void	parent(char **av, int *fd_dup, char **envp)
@@ -58,16 +66,7 @@ void	parent(char **av, int *fd_dup, char **envp)
 	if (dup2(fd_dup[0], STDIN_FILENO < 0))
 		exit(EXIT_FAILURE);
 	close(fd_dup[0]);
-	if (execve(mycmd[0], mycmd, envp) == -1)
-	{
-		if (execve(path, mycmd, envp) == -1)
-		{
-			free_split(mycmd);
-			ft_error("error");
-		}
-	}
-	else
-		cmd_not_found(mycmd);
+	exec_cmd(mycmd, envp, path);
 }
 
 void	pipex(char **av, int *fd_dup, char **envp)
