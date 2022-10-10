@@ -49,19 +49,7 @@ void	init_value(t_pipex *data, char **av, char **envp, int ac)
 	data->av = av;
 	data->envp = envp;
 	data->ac = ac;
+	data->fd = 0;
 	data->fd_dup[0] = 0;
 	data->fd_dup[1] = 0;
-}
-
-void	ft_close_parent(t_pipex *data)
-{
-	int	i;
-
-	i = 0;
-	while (i < data->ac -1)
-	{
-		if (data->fd_dup[2 * i])
-			close(data->fd_dup[2 * i]);
-		i++;
-	}
 }

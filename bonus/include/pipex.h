@@ -6,7 +6,7 @@
 /*   By: nlorion <nlorion@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/05 17:31:47 by nlorion           #+#    #+#             */
-/*   Updated: 2022/10/09 16:58:12 by nlorion          ###   ########.fr       */
+/*   Updated: 2022/09/27 11:57:09 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	free_split(char **str);
 void	cmd_not_found(char **cmd);
 int		check_access(char *mycmd, char **mycmdarg, char **paths, int type);
 void	init_value(t_pipex *data, char **av, char **envp, int ac);
-
+void	ft_close_parent(t_pipex *data);
 //  ---------------------- [PIPEX] ------------------------------- //
 
 void	child(t_pipex *data);

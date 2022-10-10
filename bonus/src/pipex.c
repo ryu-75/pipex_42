@@ -6,7 +6,7 @@
 /*   By: nlorion <nlorion@42.student.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/14 11:55:43 by nlorion           #+#    #+#             */
-/*   Updated: 2022/10/09 17:50:19 by nlorion          ###   ########.fr       */
+/*   Updated: 2022/10/10 15:23:23 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	main(int ac, char **av, char **envp)
 	}
 	else
 	{
-		if (pipe(data.fd_dup) < 0)
+		if (pipe(data.fd_dups) < 0)
 		{
 			perror("pipe");
 			exit(EXIT_FAILURE);

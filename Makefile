@@ -1,46 +1,63 @@
 PREFIXE						= pipex
 EXEC						= $(PREFIXE)
-DEBUG						= yes
-
-SRCS_DIR					= src
-SRCS						= $(SRCS_DIR)/pipex.c 			\
-								$(SRCS_DIR)/parsing.c 		\
-								$(SRCS_DIR)/utils.c 		\
-								$(SRCS_DIR)/children.c	
-
-BONUS						= bonus/src
-SRCS_BONUS					= $(BONUS)/pipex.c 			\
-								$(BONUS)/parsing.c 		\
-								$(BONUS)/utils.c 		\
-								$(BONUS)/children.c	
 
 
-OBJ							= $(SRCS:.c=.o)
-DEP							= $(SRCS:.c=.d)
-OBJ_BONUS					= $(SRCS_BONUS:.c=.o)
-DEP_BONUS					= $(SRCS_BONUS:.c=.d)
+# *********************** DIRECTORY ************************************* #
+SRCS_DIR					= src/
+OBJ_DIR						= obj/
+BONUS_DIR					= bonus/src/
+INC							= -I ./include/
 
-%.o							: %.c
-							$(CC) -c $(CFLAGS) $*.c -o $*.o
-							$(CC) -MM $(CFLAGS) $*.c -o $*.d
+# *********************** SOURCES **************************************** #
+SRC							= 	pipex.c 			\
+								parsing.c	 		\
+								utils.c		 		\
+								children.c			
+SRCS						= $(addprefix $(SRCS_DIR), $(SRC))
 
+# *********************** BONUS SOURCES ********************************** #
+SRC_B						=	pipex.c 			\
+								parsing.c	 		\
+								utils.c		 		\
+								children_bonus.c	
+SRCS_B						= $(addprefix $(BONUS_DIR), $(SRC_B))
+
+# *********************** OBJECT & DEPENDENCIES ************************* #
+OBJ							= $(SRC:.c=.o)
+OBJS						= $(addprefix $(OBJ_DIR), $(OBJ))
+
+OBJ_B						= $(SRC_B:.c=.o)
+OBJS_B						= $(addprefix $(OBJ_DIR), $(OBJ_B))
+
+# *********************** BONUS OBJECT & DEPEDENCY ********************** #
+
+$(OBJ_DIR)%.o				: $(SRCS_DIR)%.c
+							@mkdir -p $(OBJ_DIR)
+							$(CC) $(CFLAGS) -c $< -o $@ $(INC)
+
+$(OBJ_DIR)%.o				: $(BONUS_DIR)%.c
+							@mkdir -p $(OBJ_DIR)
+							$(CC) $(CFLAGS) -c $< -o $@ $(INC)
+
+# *********************** COMPILATION *********************************** #
 CC							= cc
 
-$(EXEC)						: libft/libft.a $(OBJ)
-							$(CC) $(CFLAGS) $(OBJ) -L libft -lft -o $(EXEC)
+$(EXEC)						: libft/libft.a $(OBJS)
+							$(CC) $(CFLAGS) $(OBJS) -L libft -lft -o $(EXEC)
 
+# ********************** FLAGS ****************************************** #
 CFLAGS						= -Wall -Wextra -Werror
 
 all							: $(EXEC)
 
-bonus						: $(OBJ) $(OBJ_BONUS)
+bonus						: clean $(EXEC) libft/libft.a $(OBJS_B)
+							$(CC) $(CFLAGS) $(OBJS_B) -L libft -lft -o $(EXEC)
 
 libft/libft.a				:
 							make -C libft
 
 clean						: 
-							rm -f $(OBJ) $(DEP) $(OBJ_BONUS) $(DEP_BONUS)
-							rm -rf obj
+							rm -rf $(OBJ_DIR)
 							make clean -C libft
 					
 fclean						: clean

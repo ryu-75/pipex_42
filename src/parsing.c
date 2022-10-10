@@ -48,9 +48,3 @@ char	*return_path(t_pipex *data, char *cmd)
 	free_split(data->paths);
 	return (0);
 }
-
-/**
- ***** Fixed : Catch correctly the argument into the av struct in parse
- ***** each arg entered
- * 
- */
