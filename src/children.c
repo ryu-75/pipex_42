@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   children.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlorion <nlorion@42.student.fr>            +#+  +:+       +#+        */
+/*   By: sasha <sasha@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/14 12:46:52 by nlorion           #+#    #+#             */
-/*   Updated: 2022/10/09 16:10:43 by nlorion          ###   ########.fr       */
+/*   Updated: 2022/10/12 00:53:34 by sasha            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static void	exec_cmd(t_pipex *data, char **mycmd, char *path)
 		free(path);
 		ft_error("error");
 	}
-	else if (path && execve(path, mycmd, data->envp) == -1)
+	else if (execve(path, mycmd, data->envp) == -1)
 	{
 		free_split(mycmd);
 		free(path);
@@ -57,7 +57,7 @@ void	parent(t_pipex *data)
 	
 	data->fd = open(data->av[4], O_WRONLY | O_CREAT | O_TRUNC, 0664);
 	if (data->fd < 0)
-		ft_error("error");
+		ft_error("error");	
 	path = return_path(data, data->av[3]);
 	mycmd = ft_split(data->av[3], ' ');
 	close(data->fd_dup[1]);
@@ -71,8 +71,8 @@ void	parent(t_pipex *data)
 
 void	pipex(t_pipex *data)
 {
-	int	pid1;
-	int	pid2;
+	pid_t	pid1;
+	pid_t	pid2;
 	int	status;
 
 	pid1 = fork();

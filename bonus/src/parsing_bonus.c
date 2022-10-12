@@ -20,8 +20,13 @@ char	**get_path(t_pipex *data)
 	char	**split_path;
 
 	i = 0;
+	if (!data->envp[i])
+	{
+		ft_putstr_fd("No such file or directory\n", 2);
+		exit (0);
+	}
 	while (!ft_strnstr(data->envp[i], "PATH", 4))
-		i++;
+			i++;
 	split_path = ft_split(data->envp[i] + 5, ':');
 	return (split_path);
 }
@@ -36,7 +41,7 @@ char	*return_path(t_pipex *data, char *cmd)
 	data->paths = get_path(data);
 	data->mycmdarg = ft_split(cmd, ' ');
 	while (data->paths[++i])
-	{
+	{	
 		data->part_path = ft_strjoin(data->paths[i], "/");
 		data->mycmd = ft_strjoin(data->part_path, *data->mycmdarg);
 		free(data->part_path);

@@ -3,70 +3,65 @@
 /*                                                        :::      ::::::::   */
 /*   children_bonus.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlorion <nlorion@42.student.fr>            +#+  +:+       +#+        */
+/*   By: sasha <sasha@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/14 12:46:52 by nlorion           #+#    #+#             */
-/*   Updated: 2022/10/10 15:26:16 by nlorion          ###   ########.fr       */
+/*   Updated: 2022/10/12 02:15:43 by sasha            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
-static void	exec_cmd(t_pipex *data, char **mycmd, char *path)
+void	exec_cmd(t_pipex *data, char *cmd)
 {
-	if (ft_strnstr(mycmd[0], "/", ft_strlen(mycmd[0]))
-		&& execve(mycmd[0], mycmd, data->envp) == -1)
+	char	*path;
+	char	**mycmd;
+	
+	mycmd = ft_split(cmd, ' ');
+	if (ft_strnstr(mycmd[0], "/", ft_strlen(mycmd[0])))
+		path = mycmd[0];
+	else
+		path = return_path(data, cmd);
+	if (execve(path, mycmd, data->envp) == -1)
 	{
 		free_split(mycmd);
 		free(path);
 		ft_error("error");
-	}
-	else if (path && execve(path, mycmd, data->envp) == -1)
-	{
-		free_split(mycmd);
-		free(path);
-		ft_error("error");
-	}
+	} 
 	else
 		cmd_not_found(mycmd);
 }
 
-void	init_fd(t_pipex *data)
+void	ft_process(t_pipex *data, char *cmd)
 {
-	if (data->av[1] && data->fd_in)
-		open(data->av[1], O_RDONLY);
-	else if (data->fd_in < 0)
-		close(data->fd_in);
-	else if (data->av[data->ac -1] && data->fd_out)
-		open(data->av[data->ac - 1], O_WRONLY | O_CREAT |O_TRUNC, 0664);
-	else if (data->fd_out < 0)
-		ft_error("error");
-}
-
-void	child_process(t_pipex *data)
-{
-	int	pid;
-	int	i;
-	char	**mycmd;
-	char	*path;
+	pid_t	pid;
+	int	status;
 	
-	i = 0;
-	pid = fork();
-	while (i++ < data->ac - 1)
+	if (pipe(data->fd_dup) < 0)
 	{
+		perror("pipe");
+		exit(EXIT_FAILURE);
+	}
+	else
+	{
+		pid = fork();
 		if (pid < 0)
 			ft_error("fork");
+		else if (pid)
+		{
+			close(data->fd_dup[1]);
+			if (dup2(data->fd_dup[0], STDIN_FILENO) < 0)
+				exit(EXIT_FAILURE);
+			waitpid(pid, &status, 0);
+			close(data->fd_in);
+		}
 		else
 		{
-			mycmd = ft_split(data->av[2 + i], ' ');
-			path = return_path(data, data->av[2 + i]);
-			if (dup2(data->fd_in, STDIN_FILENO) == -1)
-				exit(EXIT_FAILURE);
-			else if (dup2(data->fd_dup[2 * i - 2], data->fd_out) == -1)
-				exit(EXIT_FAILURE);
-			else if (dup2(data->fd_dup[2 * i - 2], data->fd_dup[2 * i + 1]) == -1)
-				exit(EXIT_FAILURE);
-			exec_cmd(data, mycmd, path);
+			close(data->fd_dup[0]);
+			dup2(data->fd_dup[1], STDOUT_FILENO);
+			if (data->fd_in < 0)
+				ft_error("error");
+			exec_cmd(data, cmd);
 		}
-	}
+	}	
 }

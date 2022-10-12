@@ -24,7 +24,7 @@ typedef struct s_pipex
     int fd_in;
     int fd_out;
     int ac;
-    int *fd_dup;
+    int fd_dup[2];
     char    *part_path;
     char    *mycmd;
     char    *cmd;
@@ -55,5 +55,6 @@ void	child(t_pipex *data);
 void	parent(t_pipex *data);
 void	pipex(t_pipex *data);
 void	init_fd(t_pipex *data);
-void	child_process(t_pipex *data);
+void	exec_cmd(t_pipex *data, char *cmd);
+void	ft_process(t_pipex *data, char *cmd);
 #endif
