@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sasha <sasha@student.42.fr>                +#+  +:+       +#+        */
+/*   By: nlorion <nlorion@42.student.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 18:25:59 by sasha             #+#    #+#             */
-/*   Updated: 2022/10/12 02:14:44 by sasha            ###   ########.fr       */
+/*   Updated: 2022/10/12 15:13:35 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,11 @@ int	main(int ac, char **av, char **envp)
 		data.fd_out = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (dup2(data.fd_in, STDIN_FILENO) < 0)
 			exit(EXIT_FAILURE);
+		close(data.fd_in);
 		dup2(data.fd_out, STDOUT_FILENO);
 		close(data.fd_out);
 		while (i < data.ac - 2)
-		{
 			ft_process(&data, data.av[i++]);
-			close(data.fd_dup[1]);
-			close(data.fd_dup[0]);
-		}
 		exec_cmd(&data, data.av[i]);
 	}
 	else

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   children_bonus.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sasha <sasha@student.42.fr>                +#+  +:+       +#+        */
+/*   By: nlorion <nlorion@42.student.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/14 12:46:52 by nlorion           #+#    #+#             */
-/*   Updated: 2022/10/12 02:15:43 by sasha            ###   ########.fr       */
+/*   Updated: 2022/10/12 15:50:12 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ void	exec_cmd(t_pipex *data, char *cmd)
 	if (execve(path, mycmd, data->envp) == -1)
 	{
 		free_split(mycmd);
-		free(path);
 		ft_error("error");
 	} 
 	else
@@ -47,18 +46,19 @@ void	ft_process(t_pipex *data, char *cmd)
 		pid = fork();
 		if (pid < 0)
 			ft_error("fork");
-		else if (pid)
+		if (pid)
 		{
-			close(data->fd_dup[1]);
-			if (dup2(data->fd_dup[0], STDIN_FILENO) < 0)
+			close(data->fd_dup[0]);
+			if (dup2(data->fd_dup[1], STDOUT_FILENO) < 0)
 				exit(EXIT_FAILURE);
+			close(data->fd_dup[1]);
 			waitpid(pid, &status, 0);
-			close(data->fd_in);
 		}
 		else
 		{
+			close(data->fd_dup[1]);
+			dup2(data->fd_dup[0], STDIN_FILENO);
 			close(data->fd_dup[0]);
-			dup2(data->fd_dup[1], STDOUT_FILENO);
 			if (data->fd_in < 0)
 				ft_error("error");
 			exec_cmd(data, cmd);

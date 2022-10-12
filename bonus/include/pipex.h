@@ -18,7 +18,7 @@
 # include <sys/types.h>
 # include  <errno.h>
 # include <fcntl.h>
-
+# include <string.h>
 typedef struct s_pipex
 {
     int fd_in;
