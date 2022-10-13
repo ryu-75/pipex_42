@@ -6,7 +6,7 @@
 /*   By: nlorion <nlorion@42.student.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/14 12:46:52 by nlorion           #+#    #+#             */
-/*   Updated: 2022/10/12 16:19:20 by nlorion          ###   ########.fr       */
+/*   Updated: 2022/10/13 17:57:33 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,19 @@
 
 static void	exec_cmd(t_pipex *data, char **mycmd, char *path)
 {
-	if (ft_strnstr(mycmd[0], "/", ft_strlen(mycmd[0]))
-		&& execve(mycmd[0], mycmd, data->envp) == -1)
+	if (mycmd && path)
 	{
-		free_split(mycmd);
-		free(path);
-		ft_error("error");
-	}
-	else if (execve(path, mycmd, data->envp) == -1)
-	{
-		free_split(mycmd);
-		free(path);
-		ft_error("error");
+		if (ft_strnstr(mycmd[0], "/", ft_strlen(mycmd[0]))
+			&& execve(mycmd[0], mycmd, data->envp) == -1)
+		{
+			free_split(mycmd);
+			ft_error("error");
+		}
+		else if (execve(path, mycmd, data->envp) == -1)
+		{
+			free_split(mycmd);
+			ft_error("error");
+		}
 	}
 	else
 		cmd_not_found(mycmd);

@@ -26,10 +26,12 @@ typedef struct s_pipex
     int fd_dup[2];
     char    *part_path;
     char    *mycmd;
+    char    **mycmds;
     char    *cmd;
     char    **av;
     char    **envp;
     char    **paths;
+    char    *path;
     char    **mycmdarg;
     char    **split_path;
 }           t_pipex;
@@ -38,7 +40,6 @@ typedef struct s_pipex
 // ----------------------- [PARSING] ----------------------------- //
 
 char	*return_path(t_pipex *data, char *cmd);
-char	**get_path(t_pipex *data);
 
 // ----------------------- [UTILS] ------------------------------- //
 

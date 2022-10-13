@@ -6,7 +6,7 @@
 /*   By: nlorion <nlorion@42.student.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/14 11:55:43 by nlorion           #+#    #+#             */
-/*   Updated: 2022/10/12 16:19:23 by nlorion          ###   ########.fr       */
+/*   Updated: 2022/10/13 15:37:34 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,7 @@ int	main(int ac, char **av, char **envp)
 			exit(EXIT_FAILURE);
 		}
 		else
-		{
 			pipex(&data);
-		}
 	}
 	return (0);
 }
