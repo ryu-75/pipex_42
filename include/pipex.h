@@ -29,7 +29,6 @@ typedef struct s_pipex
     char    **mycmds;
     char    *cmd;
     char    **av;
-    char    **envp;
     char    **paths;
     char    *path;
     char    **mycmdarg;
@@ -39,7 +38,7 @@ typedef struct s_pipex
 
 // ----------------------- [PARSING] ----------------------------- //
 
-char	*return_path(t_pipex *data, char *cmd);
+char	*return_path(t_pipex *data, char *cmd, char **envp);
 
 // ----------------------- [UTILS] ------------------------------- //
 
@@ -47,11 +46,11 @@ void	ft_error(char *s);
 void	free_split(char **str);
 void	cmd_not_found(char **cmd);
 int		check_access(char *mycmd, char **mycmdarg, char **paths, int type);
-void	init_value(t_pipex *data, char **av, char **envp, int ac);
+void	init_value(t_pipex *data, char **av, int ac);
 void	ft_close_parent(t_pipex *data);
 //  ---------------------- [PIPEX] ------------------------------- //
 
-void	child(t_pipex *data);
-void	parent(t_pipex *data);
-void	pipex(t_pipex *data);
+void	child(t_pipex *data, char **envp);
+void	parent(t_pipex *data, char **envp);
+void	pipex(t_pipex *data, char **envp);
 #endif

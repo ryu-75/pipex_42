@@ -44,10 +44,9 @@ void	cmd_not_found(char **cmd)
 	exit(EXIT_FAILURE);
 }
 
-void	init_value(t_pipex *data, char **av, char **envp, int ac)
+void	init_value(t_pipex *data, char **av, int ac)
 {
 	data->av = av;
-	data->envp = envp;
 	data->ac = ac;
 	data->fd = 0;
 	data->fd_dup[0] = 0;

@@ -6,23 +6,24 @@
 /*   By: nlorion <nlorion@42.student.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/14 12:46:52 by nlorion           #+#    #+#             */
-/*   Updated: 2022/10/13 17:57:33 by nlorion          ###   ########.fr       */
+/*   Updated: 2022/10/14 16:57:51 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
-static void	exec_cmd(t_pipex *data, char **mycmd, char *path)
+static void	exec_cmd(char **mycmd, char *path, char **envp)
 {
 	if (mycmd && path)
 	{
+
 		if (ft_strnstr(mycmd[0], "/", ft_strlen(mycmd[0]))
-			&& execve(mycmd[0], mycmd, data->envp) == -1)
+			&& execve(mycmd[0], mycmd, envp) == -1)
 		{
 			free_split(mycmd);
 			ft_error("error");
 		}
-		else if (execve(path, mycmd, data->envp) == -1)
+		else if (execve(path, mycmd, envp) == -1)
 		{
 			free_split(mycmd);
 			ft_error("error");
@@ -32,7 +33,7 @@ static void	exec_cmd(t_pipex *data, char **mycmd, char *path)
 		cmd_not_found(mycmd);
 }
 
-void	child(t_pipex *data)
+void	child(t_pipex *data, char **envp)
 {
 	char	*path;
 	char	**mycmd;
@@ -40,7 +41,7 @@ void	child(t_pipex *data)
 	data->fd = open(data->av[1], O_RDONLY);
 	if (data->fd < 0)
 		ft_error("error");
-	path = return_path(data, data->av[2]);
+	path = return_path(data, data->av[2], envp);
 	mycmd = ft_split(data->av[2], ' ');
 	close(data->fd_dup[0]);
 	if (dup2(data->fd, STDIN_FILENO < 0))
@@ -48,18 +49,18 @@ void	child(t_pipex *data)
 	close(data->fd);
 	dup2(data->fd_dup[1], STDOUT_FILENO);
 	close(data->fd_dup[1]);
-	exec_cmd(data, mycmd, path);
+	exec_cmd(mycmd, path, envp);
 }
 
-void	parent(t_pipex *data)
+void	parent(t_pipex *data, char **envp)
 {
 	char	*path;
 	char	**mycmd;
 	
 	data->fd = open(data->av[4], O_WRONLY | O_CREAT | O_TRUNC, 0664);
 	if (data->fd < 0)
-		ft_error("error");	
-	path = return_path(data, data->av[3]);
+		ft_error("error");
+	path = return_path(data, data->av[3], envp);
 	mycmd = ft_split(data->av[3], ' ');
 	close(data->fd_dup[1]);
 	dup2(data->fd, STDOUT_FILENO);
@@ -67,10 +68,10 @@ void	parent(t_pipex *data)
 	if (dup2(data->fd_dup[0], STDIN_FILENO < 0))
 		exit(EXIT_FAILURE);
 	close(data->fd_dup[0]);
-	exec_cmd(data, mycmd, path);
+	exec_cmd(mycmd, path, envp);
 }
 
-void	pipex(t_pipex *data)
+void	pipex(t_pipex *data, char **envp)
 {
 	pid_t	pid1;
 	pid_t	pid2;
@@ -80,12 +81,12 @@ void	pipex(t_pipex *data)
 	if (pid1 < 0)
 		ft_error("fork");
 	else if (pid1 == 0)
-		child(data);
+		child(data, envp);
 	pid2 = fork();
 	if (pid2 < 0)
 		ft_error("fork");
 	else if (pid2 == 0)
-		parent(data);
+		parent(data, envp);
 	close(data->fd_dup[0]);
 	close(data->fd_dup[1]);
 	waitpid(pid1, &status, 0);

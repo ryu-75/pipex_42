@@ -15,25 +15,38 @@
 /* We truncate the unix command with path,
 it's allow to applicate the command on it */
 
-char	**get_path(t_pipex *data)
+static char	**get_env(char **envp)
 {
 	int	i;
 	char	**split_path;
-	i = 0;	
-	while (!ft_strnstr(data->envp[i], "PATH=", 5))
+
+	i = 0;
+	while (envp[i] && ft_strncmp(envp[i], "PATH=", 5) != 0)
 		i++;
-	split_path = ft_split(data->envp[i] + 5, ':');
+	split_path = ft_split(envp[i] + 5, ':');
 	return (split_path);
 }
 
-char	*return_path(t_pipex *data, char *cmd)
+char	*check_cmd(char *cmd, char **envp)
 {
-	int		i;
+	if (!*envp)
+	{
+		if (ft_strnstr(cmd, "/", ft_strlen(cmd)))
+			return (cmd);
+	}
+	return (NULL);
+}
 
+char	*return_path(t_pipex *data, char *cmd, char **envp)
+{	
+	int	i;
+	
 	i = -1;
+
+	check_cmd(cmd, envp);
 	if (ft_strnstr(cmd, "/", ft_strlen(cmd)))
 		return (cmd);
-	data->paths = get_path(data);
+	data->paths = get_env(envp);
 	data->mycmdarg = ft_split(cmd, ' ');
 	while (data->paths[++i])
 	{
@@ -48,19 +61,3 @@ char	*return_path(t_pipex *data, char *cmd)
 	free_split(data->paths);
 	return (NULL);
 }
-
-// char	*return_path(t_pipex *data, char *cmd)
-// {
-// 	data->mycmdarg = ft_split(cmd, ' ');
-// 	if (ft_strnstr(data->mycmdarg[0], "/", ft_strlen(data->mycmdarg[0])))
-// 	{
-// 		// free_split(data->mycmdarg);
-// 		return (cmd);
-// 	}
-// 	else if (!ft_strnstr(data->mycmdarg[0], "/", ft_strlen(data->mycmdarg[0])))
-// 	{
-// 		printf("1 : %s\n", cmd);
-// 		get_path(data, cmd);
-// 	}
-// 	return (NULL);
-// }
