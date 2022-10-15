@@ -6,7 +6,7 @@
 /*   By: nlorion <nlorion@42.student.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/14 11:55:43 by nlorion           #+#    #+#             */
-/*   Updated: 2022/10/14 16:24:26 by nlorion          ###   ########.fr       */
+/*   Updated: 2022/10/15 14:33:38 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 int	main(int ac, char **av, char **envp)
 {
 	t_pipex	data;
-	
-	init_value(&data, av, ac);
+
+	init_value(&data, av, envp, ac);
 	if (ac != 5)
 	{
 		ft_putstr_fd("Expected : file1 [cmd1] [cmd2] file2\n", 2);
@@ -30,7 +30,7 @@ int	main(int ac, char **av, char **envp)
 			exit(EXIT_FAILURE);
 		}
 		else
-			pipex(&data, envp);
+			pipex(&data);
 	}
 	return (0);
 }

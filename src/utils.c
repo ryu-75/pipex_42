@@ -6,7 +6,7 @@
 /*   By: nlorion <nlorion@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/07 15:55:51 by nlorion           #+#    #+#             */
-/*   Updated: 2022/10/08 11:50:20 by nlorion          ###   ########.fr       */
+/*   Updated: 2022/10/15 14:41:16 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,11 @@ void	cmd_not_found(char **cmd)
 	exit(EXIT_FAILURE);
 }
 
-void	init_value(t_pipex *data, char **av, int ac)
+void	init_value(t_pipex *data, char **av, char **envp, int ac)
 {
 	data->av = av;
 	data->ac = ac;
+	data->envp = envp;
 	data->fd = 0;
 	data->fd_dup[0] = 0;
 	data->fd_dup[1] = 0;
